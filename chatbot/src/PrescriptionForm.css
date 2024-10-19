@@ -1,0 +1,109 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f8ff; /* Light blue background */
+    margin: 0;
+    padding: 0;
+  }
+  
+  h2 {
+    color: #004085; /* Dark blue for the header */
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  form {
+    background-color: #ffffff;
+    width: 400px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin: 50px auto;
+  }
+  
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  label {
+    color: #004085; /* Dark blue for labels */
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+    width: 100px; /* Control label width for alignment */
+    text-align: right;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #495057;
+  }
+  
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  textarea:focus {
+    border-color: #0056b3; /* Blue focus border */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.2); /* Subtle blue shadow on focus */
+  }
+  
+  textarea {
+    resize: none;
+    height: 100px;
+  }
+  
+  button {
+    background-color: #0056b3; /* Primary blue button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #004085; /* Darker blue on hover */
+  }
+  
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.3); /* Blue focus shadow */
+  }
+  
+  /* Media Query for responsiveness */
+  @media (max-width: 600px) {
+    form {
+      width: 90%;
+      padding: 20px;
+    }
+  
+    .form-group {
+      flex-direction: column; /* Stack vertically on small screens */
+      align-items: stretch;
+    }
+  
+    label {
+      text-align: left;
+      width: auto;
+      margin-bottom: 5px;
+    }
+  
+    h2 {
+      font-size: 20px;
+    }
+  
+    button {
+      font-size: 14px;
+    }
+  }
+  

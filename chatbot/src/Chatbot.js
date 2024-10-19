@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Chatbot.css'; // Add your styles here or use inline styling
-
 const Chatbot = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
