@@ -46,9 +46,9 @@ body {
   
   .chat-header {
     background: #007bff;
-    padding: 6px;
+    padding: 15px;
     height: 30px;
-    padding-left: 10px;
+    padding-left: 10px; 
     color: #fff;
     font-size: 1.2em;
     font-weight: bold;
@@ -60,6 +60,7 @@ body {
   .close-button {
     background: none;
     border: none;
+    width: 40px;
     font-size: 1.5em;
     color: #fff;
     cursor: pointer;
