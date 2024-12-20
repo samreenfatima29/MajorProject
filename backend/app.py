@@ -184,6 +184,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 from langchain.prompts import PromptTemplate
 from transformers import pipeline
+from datetime import datetime
 # Initialize the app
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Change this to a secure random key
@@ -270,8 +271,8 @@ def generate_prescription():
     db.session.commit()
 
     return jsonify({"message": "Prescription generated successfully.", "data": prescription_content}), 200
-'''
-# Endpoint for testing the model
+
+# Endpoint for testing the model - hard coded response
 @app.route("/ask_pdf", methods=["POST"])
 def aiPost():
     json_content = request.json
@@ -280,14 +281,33 @@ def aiPost():
     response = "This is a hardcoded response. The model is working fine."
     return {"answer": response}
 
-# Uploading files to the PDF directory
+# Uploading files to the PDF directory - hard coded response
 @app.route("/pdf", methods=["POST"])
 def pdfPost():
-    file = request.files["file"]
+    file = request.files["pdf"]
     file_name = file.filename
-    save_file = "pdf/" + file_name
-    file.save(save_file)
+     # Extract patient name and date from the file name
+    patient_name, date_with_ext = file_name.rsplit(".", 1)[0].split("_")
+    date = date_with_ext.split(".")[0]
 
+    # Create the directory structure
+    save_dir = os.path.join("pdf", patient_name)
+    os.makedirs(save_dir, exist_ok=True)  # Create patient folder if it doesn't exist
+
+    # Check if a file with the same name exists for the date
+    base_file_name = f"{date}.pdf"
+    save_path = os.path.join(save_dir, base_file_name)
+
+    if os.path.exists(save_path):
+        # Add timestamp to the filename to make it unique
+        timestamp = datetime.now().strftime("%H%M%S")  # e.g., 134520 for 1:45:20 PM
+        unique_file_name = f"{date}_{timestamp}.pdf"
+        save_path = os.path.join(save_dir, unique_file_name)
+
+    # Save the file
+    file.save(save_path)
+
+    print(f"File saved to: {save_path}")
     response = {
         "status": "Successfully Uploaded",
         "filename": file_name,
@@ -295,7 +315,7 @@ def pdfPost():
         "chunks": 0,
     }
     return response
-'''
+
 
 # sending the prompt to the model input is the input and context is from the db
 raw_prompt = PromptTemplate.from_template(
@@ -309,24 +329,24 @@ raw_prompt = PromptTemplate.from_template(
 )
 
 # the api end point for taking the query input 
-@app.route("/ai", methods=["POST"])
-def aiPost():
-    print("Post /ai called")
-    json_content = request.json
-    query = json_content.get("query")
+# @app.route("/ai", methods=["POST"])
+# def aiPost():
+#     print("Post /ai called")
+#     json_content = request.json
+#     query = json_content.get("query")
 
-    print(f"query: {query}")
+#     print(f"query: {query}")
 
-    # response = cached_llm.invoke(query)
-    response="This endpoint is working fine"
+#     # response = cached_llm.invoke(query)
+#     response="This endpoint is working fine"
 
-    print(response)
+#     print(response)
 
-    response_answer = {"answer": response}
-    return response_answer
+#     response_answer = {"answer": response}
+#     return response_answer
 
 # asking questions from these pdfs
-
+'''
 @app.route("/ask_pdf", methods=["POST"])
 def askPDFPost():
     print("Post /ask_pdf called")
@@ -362,42 +382,65 @@ def askPDFPost():
 
     response_answer = {"answer": result["answer"], "sources": sources}
     return response_answer
+''' 
+#uploading files to the pdf directory 
+# @app.route("/pdf", methods=["POST"])
+# def pdfPost():
+#     file = request.files["file"]
+#     file_name = file.filename
+#     # Extract patient name and date from the file name
+#     file = request.files["pdf"]
+#     file_name = file.filename
+#      # Extract patient name and date from the file name
+#     patient_name, date_with_ext = file_name.rsplit(".", 1)[0].split("_")
+#     date = date_with_ext.split(".")[0]
 
-# uploading files to the pdf directory 
-@app.route("/pdf", methods=["POST"])
-def pdfPost():
-    file = request.files["file"]
-    file_name = file.filename
-    save_file = "pdf/" + file_name
-    file.save(save_file)
-    print(f"filename: {file_name}")
-    # check if its saved in the pdf directory
-    '''
-    response ={"status":"successfully uploaded","file_name":file_name}
-    print(response)
-    return response
-    '''
+#     # Create the directory structure
+#     save_dir = os.path.join("pdf", patient_name)
+#     os.makedirs(save_dir, exist_ok=True)  # Create patient folder if it doesn't exist
+
+#     # Check if a file with the same name exists for the date
+#     base_file_name = f"{date}.pdf"
+#     save_path = os.path.join(save_dir, base_file_name)
+
+#     if os.path.exists(save_path):
+#         # Add timestamp to the filename to make it unique
+#         timestamp = datetime.now().strftime("%H%M%S")  # e.g., 134520 for 1:45:20 PM
+#         unique_file_name = f"{date}_{timestamp}.pdf"
+#         save_path = os.path.join(save_dir, unique_file_name)
+
+#     # Save the file
+#     file.save(save_path)
+
+#     print(f"File saved to: {save_path}")
+
+#     # check if its saved in the pdf directory
+#     '''
+#     response ={"status":"successfully uploaded","file_name":file_name}
+#     print(response)
+#     return response
+#     '''
    
-    loader = PDFPlumberLoader(save_file)
-    docs = loader.load_and_split()
-    print(f"docs len={len(docs)}")
+#     loader = PDFPlumberLoader(save_path)
+#     docs = loader.load_and_split()
+#     print(f"docs len={len(docs)}")
 
-    chunks = text_splitter.split_documents(docs)
-    print(f"chunks len={len(chunks)}")
+#     chunks = text_splitter.split_documents(docs)
+#     print(f"chunks len={len(chunks)}")
 
-    vector_store = Chroma.from_documents(
-        documents=chunks, embedding=embedding, persist_directory=folder_path
-    )
+#     vector_store = Chroma.from_documents(
+#         documents=chunks, embedding=embedding, persist_directory=folder_path
+#     )
 
-    vector_store.persist()
+#     vector_store.persist()
 
-    response = {
-        "status": "Successfully Uploaded",
-        "filename": file_name,
-        "doc_len": len(docs),
-        "chunks": len(chunks),
-    }
-    return response
+#     response = {
+#         "status": "Successfully Uploaded",
+#         "filename": file_name,
+#         "doc_len": len(docs),
+#         "chunks": len(chunks),
+#     }
+#     return response
 
 def start_app():
     app.run(host="0.0.0.0", port=8080, debug=True)
