@@ -1,0 +1,6 @@
+# Virtual environment
+venv/
+.env/
+node_modules
+node_modules
+pdf/PatientID_2
