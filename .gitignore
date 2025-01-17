@@ -3,5 +3,5 @@ venv/
 .env/
 node_modules
 node_modules
-backend/pdf/*
-backend/db/*
+# backend/pdf/*
+# backend/db/*
