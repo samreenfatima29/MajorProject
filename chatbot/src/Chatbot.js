@@ -51,7 +51,7 @@ const Chatbot = () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('http://localhost:8080/pdf', {
+    const response = await fetch('http://localhost:8080/upload_pdf', {
       method: 'POST',
       body: formData,
     });
